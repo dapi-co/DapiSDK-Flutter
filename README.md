@@ -1,5 +1,5 @@
 # DapiSDK-Flutter
-This guide will show you how to integrate DapiConnect SDK for Flutter and use its components to interact with the API.
+This guide will show you how to integrate DapiSDK for Flutter and use its components to interact with the API.
 
 
 # Dapi Flutter SDK

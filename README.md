@@ -17,7 +17,7 @@ You can check out our [Flutter Integration Guide](https://dapi-api.readme.io/doc
 ## Run The Example App
 
 1. Clone and open the project on Android Studio.
-2. Open `main.dart` and replace `APP_KEY` with your real appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
+2. Open `main.dart` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
 3. For Android, open build.gradle and replace applicationId value `com.dapi.app` with your Bundle ID.
 4. For iOS, open the iOS project on xcode and replace Bundle Identifier value `com.dapi.app` with your Bundle ID.
 5. Sync the project files and run the app.

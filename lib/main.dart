@@ -314,10 +314,10 @@ Future<CreateTransferResponse?> createTransferToExistingBeneficiary(
   }
 }
 
-Future<DapiBeneficiariesResponse?> getWireBeneficiaries(
+Future<DapiWireBeneficiariesResponse?> getWireBeneficiaries(
     DapiConnection connection) async {
   try {
-    DapiBeneficiariesResponse beneficiariesResponse =
+    DapiWireBeneficiariesResponse beneficiariesResponse =
     await connection.getWireBeneficiaries();
     print(beneficiariesResponse.beneficiaries!.first.id);
     return beneficiariesResponse;
@@ -353,7 +353,7 @@ Future<CreateTransferResponse?> createWireTransfer(
 Future<CreateTransferResponse?> createWireTransferToExistingBeneficiary(
     DapiConnection connection) async {
   try {
-    DapiBeneficiariesResponse? beneficiariesResponse =
+    DapiWireBeneficiariesResponse? beneficiariesResponse =
     await getWireBeneficiaries(connection);
     CreateTransferResponse result =
     await connection.createWireTransferToExistingBeneficiary(

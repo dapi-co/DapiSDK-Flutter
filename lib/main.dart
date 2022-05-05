@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dapi/dapi.dart';
 
-DapiConnection? connection;
+DapiConnection? selectedConnection;
+List<DapiConnection> connections = List.empty(growable: true);
 
 void main() {
   runApp(MyApp());
@@ -23,12 +24,88 @@ class Button extends StatelessWidget {
   }
 }
 
+class SpinnerWidget extends StatefulWidget {
+  const SpinnerWidget({Key? key}) : super(key: key);
+
+  @override
+  State<SpinnerWidget> createState() => _SpinnerWidgetState();
+}
+
+class _SpinnerWidgetState extends State<SpinnerWidget> {
+  String? dropdownValue;
+
+  Future<List<DapiConnection>> getItems() async {
+    List<DapiConnection>? resultConnections = await getConnections();
+    if (resultConnections != null && resultConnections.isNotEmpty) {
+      dropdownValue ??= resultConnections.first.bankShortName;
+      connections = resultConnections;
+      selectedConnection = connections
+          .firstWhere((value) => value.bankShortName == dropdownValue);
+    }
+    return connections;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getItems();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getItems(),
+        builder: (context, AsyncSnapshot snapshot) {
+          return DropdownButton<String>(
+            value: dropdownValue,
+            icon: const Icon(Icons.arrow_downward),
+            isExpanded: true,
+            hint: const Text("Bank Connections"),
+            elevation: 16,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+                selectedConnection = connections
+                    .firstWhere((value) => value.bankShortName == newValue);
+              });
+            },
+            items: connections
+                .map<DropdownMenuItem<String>>((DapiConnection value) {
+              return DropdownMenuItem<String>(
+                value: value.bankShortName,
+                child: Text(value.bankShortName),
+              );
+            }).toList(),
+          );
+        });
+  }
+}
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  void presentConnect() {
+    Dapi.onConnectionSuccessful.listen((m) => setState(() {
+
+    }));
+
+    Dapi.onConnectionFailure.listen((m) => print("CONNECTION_FAILED"));
+
+    Dapi.onBankRequest.listen((m) => print("BANK_REQUEST"));
+
+    Dapi.onConnectDismissed.listen((m) => print("CONNECT_DISMISSED"));
+
+    Dapi.presentConnect();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -39,75 +116,89 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Dapi Connect'),
+          title: const Text("Dapi Connect"),
         ),
-        body: ListView(
-          padding: EdgeInsets.all(20),
-          children: [
-            Button(onPressed: () => startDapi(), text: "Start"),
-            Button(
-                onPressed: () => setConfigurations(DapiConfigurations(
-                    environment: DapiEnvironment.SANDBOX,
-                    countries: List.from({"US"}),
-                    showAddButton: true,
-                    postSuccessfulConnectionLoadingText: "TestTest")),
-                text: "Set Configurations"),
-            Button(
-                onPressed: () => configurations(), text: "Get Configurations"),
-            Button(onPressed: () => isStarted(), text: "Is Started"),
-            Button(
-                onPressed: () => setClientUserID("newID"),
-                text: "Set Client User ID"),
-            Button(onPressed: () => clientUserID(), text: "Get Client User ID"),
-            Button(onPressed: () => presentConnect(), text: "Present Connect"),
-            Button(onPressed: () => getConnections(), text: "Get Connections"),
-            Button(
-                onPressed: () => getIdentity(connection!),
-                text: "Get Identity"),
-            Button(
-                onPressed: () => getAccounts(connection!),
-                text: "Get Accounts"),
-            Button(onPressed: () => getCards(connection!), text: "Get Cards"),
-            Button(
-                onPressed: () => getTransactionsForAccount(connection!,
-                    DateTime.parse("2021-11-01"), DateTime.parse("2021-12-10")),
-                text: "Get Transactions For Account"),
-            Button(
-                onPressed: () => getTransactionsForCard(connection!,
-                    DateTime.parse("2021-05-01"), DateTime.parse("2021-09-10")),
-                text: "Get Transactions For Card"),
-            Button(
-                onPressed: () => getAccountsMetadata(connection!),
-                text: "Get Accounts Metadata"),
-            Button(
-                onPressed: () => getBeneficiaries(connection!),
-                text: "Get Beneficiaries"),
-            Button(
-                onPressed: () => createBeneficiary(connection!),
-                text: "Create Beneficiary"),
-            Button(
-                onPressed: () => createTransfer(connection!),
-                text: "Create Transfer"),
-            Button(
-                onPressed: () =>
-                    createTransferToExistingBeneficiary(connection!),
-                text: "Create Transfer To Existing Beneficiary"),
-            Button(
-                onPressed: () => getWireBeneficiaries(connection!),
-                text: "Get Wire Beneficiaries"),
-            Button(
-                onPressed: () => createWireBeneficiary(connection!),
-                text: "Create Wire Beneficiary"),
-            Button(
-                onPressed: () => createWireTransfer(connection!),
-                text: "Create Wire Transfer"),
-            Button(
-                onPressed: () =>
-                    createWireTransferToExistingBeneficiary(connection!),
-                text: "Create Wire Transfer To Existing Beneficiary"),
-            Button(onPressed: () => delete(connection!), text: "Delete"),
-          ],
-        ),
+        body: FutureBuilder(
+            future: startDapi(),
+            builder: (context, AsyncSnapshot snapshot) {
+              return ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  SpinnerWidget(),
+                  Button(
+                      onPressed: () => configurations(),
+                      text: "Get Configurations"),
+                  Button(onPressed: () => isStarted(), text: "Is Started"),
+                  Button(
+                      onPressed: () => setClientUserID("newID"),
+                      text: "Set Client User ID"),
+                  Button(
+                      onPressed: () => clientUserID(),
+                      text: "Get Client User ID"),
+                  Button(
+                      onPressed: () => presentConnect(),
+                      text: "Present Connect"),
+                  Button(
+                      onPressed: () => getConnections(),
+                      text: "Get Connections"),
+                  Button(
+                      onPressed: () => getIdentity(selectedConnection!),
+                      text: "Get Identity"),
+                  Button(
+                      onPressed: () => getAccounts(selectedConnection!),
+                      text: "Get Accounts"),
+                  Button(
+                      onPressed: () => getCards(selectedConnection!),
+                      text: "Get Cards"),
+                  Button(
+                      onPressed: () => getTransactionsForAccount(
+                          selectedConnection!,
+                          DateTime.parse("2021-11-01"),
+                          DateTime.parse("2021-12-10")),
+                      text: "Get Transactions For Account"),
+                  Button(
+                      onPressed: () => getTransactionsForCard(
+                          selectedConnection!,
+                          DateTime.parse("2021-05-01"),
+                          DateTime.parse("2021-09-10")),
+                      text: "Get Transactions For Card"),
+                  Button(
+                      onPressed: () => getAccountsMetadata(selectedConnection!),
+                      text: "Get Accounts Metadata"),
+                  Button(
+                      onPressed: () => getBeneficiaries(selectedConnection!),
+                      text: "Get Beneficiaries"),
+                  Button(
+                      onPressed: () => createBeneficiary(selectedConnection!),
+                      text: "Create Beneficiary"),
+                  Button(
+                      onPressed: () => createTransfer(selectedConnection!),
+                      text: "Create Transfer"),
+                  Button(
+                      onPressed: () => createTransferToExistingBeneficiary(
+                          selectedConnection!),
+                      text: "Create Transfer To Existing Beneficiary"),
+                  Button(
+                      onPressed: () =>
+                          getWireBeneficiaries(selectedConnection!),
+                      text: "Get Wire Beneficiaries"),
+                  Button(
+                      onPressed: () =>
+                          createWireBeneficiary(selectedConnection!),
+                      text: "Create Wire Beneficiary"),
+                  Button(
+                      onPressed: () => createWireTransfer(selectedConnection!),
+                      text: "Create Wire Transfer"),
+                  Button(
+                      onPressed: () => createWireTransferToExistingBeneficiary(
+                          selectedConnection!),
+                      text: "Create Wire Transfer To Existing Beneficiary"),
+                  Button(
+                      onPressed: () => delete(selectedConnection!),
+                      text: "Delete"),
+                ],
+              );
+            }),
       ),
     );
   }
@@ -115,7 +206,9 @@ class _MyAppState extends State<MyApp> {
 
 Future<String?> startDapi() async {
   try {
-    return await Dapi.start("APP_KEY", "1234ID",
+    return await Dapi.start(
+        "ce15a3407b6561da87bd847e27b2f530a6a84279d29d686b3daf60ca2f570cae",
+        "1234ID",
         configurations: DapiConfigurations(
             environment: DapiEnvironment.SANDBOX,
             countries: List.from({"AE"}),
@@ -133,18 +226,6 @@ Future<bool?> isStarted() async {
   } on DapiSdkException catch (e) {
     print('Error logged in Example Flutter app $e.');
   }
-}
-
-void presentConnect() async {
-  Dapi.onConnectionSuccessful.listen((m) => print("CONNECTION_SUCCESSFUl"));
-
-  Dapi.onConnectionFailure.listen((m) => print("CONNECTION_FAILED"));
-
-  Dapi.onBankRequest.listen((m) => print("BANK_REQUEST"));
-
-  Dapi.onConnectDismissed.listen((m) => print("CONNECT_DISMISSED"));
-
-  Dapi.presentConnect();
 }
 
 void dismissConnect() {
@@ -173,12 +254,12 @@ Future<String?> clientUserID() async {
 
 Future<List<DapiConnection>?> getConnections() async {
   try {
-    List<DapiConnection> connections = await Dapi.getConnections();
-    if (connections.isNotEmpty) {
-      connection = connections.first;
+    bool? isDapiStarted = await isStarted();
+    if (isDapiStarted != null && isDapiStarted) {
+      List<DapiConnection> resultConnections = await Dapi.getConnections();
+      print(resultConnections.toString());
+      return resultConnections;
     }
-    print(connections.toString());
-    return connections;
   } on DapiSdkException catch (e) {
     print('Error logged in Example Flutter app $e.');
   }
@@ -242,7 +323,7 @@ Future<DapiAccountsMetadataResponse?> getAccountsMetadata(
     DapiConnection connection) async {
   try {
     DapiAccountsMetadataResponse accountsMetadataResponse =
-    await connection.getAccountsMetadata();
+        await connection.getAccountsMetadata();
     print(accountsMetadataResponse.metadata?.swiftCode);
     return accountsMetadataResponse;
   } on DapiSdkException catch (e) {
@@ -264,7 +345,7 @@ Future<DapiBeneficiariesResponse?> getBeneficiaries(
     DapiConnection connection) async {
   try {
     DapiBeneficiariesResponse beneficiariesResponse =
-    await connection.getBeneficiaries();
+        await connection.getBeneficiaries();
     print(beneficiariesResponse.beneficiaries!.first.id);
     return beneficiariesResponse;
   } on DapiSdkException catch (e) {
@@ -275,7 +356,7 @@ Future<DapiBeneficiariesResponse?> getBeneficiaries(
 Future<DapiResult?> createBeneficiary(DapiConnection connection) async {
   try {
     DapiResult result =
-    await connection.createBeneficiary(getSandboxBeneficiary());
+        await connection.createBeneficiary(getSandboxBeneficiary());
     print(result.operationID);
     return result;
   } on DapiSdkException catch (e) {
@@ -288,7 +369,7 @@ Future<CreateTransferResponse?> createTransfer(
   try {
     Dapi.onTransferUiDismissed.listen((m) => print("TRANSFER_UI_DISMISSED"));
     CreateTransferResponse result =
-    await connection.createTransfer(null, getSandboxBeneficiary(), 0, null);
+        await connection.createTransfer(null, getSandboxBeneficiary(), 0, null);
     print(result.accountID);
     return result;
   } on DapiSdkException catch (e) {
@@ -300,13 +381,13 @@ Future<CreateTransferResponse?> createTransferToExistingBeneficiary(
     DapiConnection connection) async {
   try {
     DapiBeneficiariesResponse? beneficiariesResponse =
-    await getBeneficiaries(connection);
+        await getBeneficiaries(connection);
     CreateTransferResponse result =
-    await connection.createTransferToExistingBeneficiary(
-        connection.accounts.first,
-        beneficiariesResponse!.beneficiaries!.first.id!,
-        2.0,
-        null);
+        await connection.createTransferToExistingBeneficiary(
+            connection.accounts.first,
+            beneficiariesResponse!.beneficiaries!.first.id!,
+            2.0,
+            null);
     print(result.accountID);
     return result;
   } on DapiSdkException catch (e) {
@@ -318,7 +399,7 @@ Future<DapiWireBeneficiariesResponse?> getWireBeneficiaries(
     DapiConnection connection) async {
   try {
     DapiWireBeneficiariesResponse beneficiariesResponse =
-    await connection.getWireBeneficiaries();
+        await connection.getWireBeneficiaries();
     print(beneficiariesResponse.beneficiaries!.first.id);
     return beneficiariesResponse;
   } on DapiSdkException catch (e) {
@@ -329,7 +410,7 @@ Future<DapiWireBeneficiariesResponse?> getWireBeneficiaries(
 Future<DapiResult?> createWireBeneficiary(DapiConnection connection) async {
   try {
     DapiResult result =
-    await connection.createWireBeneficiary(getSandboxWireBeneficiary());
+        await connection.createWireBeneficiary(getSandboxWireBeneficiary());
     print(result.operationID);
     return result;
   } on DapiSdkException catch (e) {
@@ -354,13 +435,13 @@ Future<CreateTransferResponse?> createWireTransferToExistingBeneficiary(
     DapiConnection connection) async {
   try {
     DapiWireBeneficiariesResponse? beneficiariesResponse =
-    await getWireBeneficiaries(connection);
+        await getWireBeneficiaries(connection);
     CreateTransferResponse result =
-    await connection.createWireTransferToExistingBeneficiary(
-        connection.accounts.first,
-        beneficiariesResponse!.beneficiaries!.first.id!,
-        99.0,
-        null);
+        await connection.createWireTransferToExistingBeneficiary(
+            connection.accounts.first,
+            beneficiariesResponse!.beneficiaries!.first.id!,
+            99.0,
+            null);
     print(result.accountID);
     return result;
   } on DapiSdkException catch (e) {

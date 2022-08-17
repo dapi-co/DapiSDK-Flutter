@@ -207,7 +207,7 @@ class _MyAppState extends State<MyApp> {
 Future<String?> startDapi() async {
   try {
     return await Dapi.start(
-        "ce15a3407b6561da87bd847e27b2f530a6a84279d29d686b3daf60ca2f570cae",
+        "APP_KET",
         "1234ID",
         configurations: DapiConfigurations(
             environment: DapiEnvironment.SANDBOX,
@@ -371,6 +371,8 @@ Future<CreateTransferResponse?> createTransfer(
     CreateTransferResponse result =
         await connection.createTransfer(null, getSandboxBeneficiary(), 0, null);
     print(result.accountID);
+    print(result.remark);
+    print(result.reference);
     return result;
   } on DapiSdkException catch (e) {
     print('Error logged in Example Flutter app $e.');
@@ -455,11 +457,11 @@ DapiBeneficiary getSandboxBeneficiary() {
 
   return DapiBeneficiary(
       address: lineAddress,
-      accountNumber: "1623404370879825504324",
+      accountNumber: "1647518280840289401662",
       name: "name",
       bankName: "bankName",
       swiftCode: "DAPIBANK",
-      iban: "DAPIBANKAEENBD1623404370879825504324",
+      iban: "DAPIBANKAEHSBC1647518280840289401662",
       country: "AE",
       branchAddress: "branchAddress",
       branchName: "branchName",

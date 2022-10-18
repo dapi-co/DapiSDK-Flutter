@@ -196,6 +196,9 @@ class _MyAppState extends State<MyApp> {
                   Button(
                       onPressed: () => delete(selectedConnection!),
                       text: "Delete"),
+                  Button(
+                      onPressed: () => presentAccountSelection(selectedConnection!),
+                      text: "Present Account Selection"),
                 ],
               );
             }),
@@ -207,7 +210,7 @@ class _MyAppState extends State<MyApp> {
 Future<String?> startDapi() async {
   try {
     return await Dapi.start(
-        "APP_KET",
+        "APP_KEY",
         "1234ID",
         configurations: DapiConfigurations(
             environment: DapiEnvironment.SANDBOX,
@@ -299,7 +302,7 @@ Future<DapiTransactionsResponse?> getTransactionsForAccount(
     DapiConnection connection, DateTime fromDate, DateTime toDate) async {
   try {
     DapiTransactionsResponse transactionsResponse = await connection
-        .getTransactionsForAccount(connection.accounts.first, fromDate, toDate);
+        .getTransactionsForAccount(connection.accounts.first, fromDate, toDate, type: DapiTransactionsType.DEFAULT);
     print(transactionsResponse.transactions!.first.amount);
     return transactionsResponse;
   } on DapiSdkException catch (e) {
@@ -311,7 +314,7 @@ Future<DapiTransactionsResponse?> getTransactionsForCard(
     DapiConnection connection, DateTime fromDate, DateTime toDate) async {
   try {
     DapiTransactionsResponse transactionsResponse = await connection
-        .getTransactionsForCard(connection.cards.first, fromDate, toDate);
+        .getTransactionsForCard(connection.cards.first, fromDate, toDate, type: DapiTransactionsType.DEFAULT);
     print(transactionsResponse.transactions!.first.amount);
     return transactionsResponse;
   } on DapiSdkException catch (e) {
@@ -449,6 +452,11 @@ Future<CreateTransferResponse?> createWireTransferToExistingBeneficiary(
   } on DapiSdkException catch (e) {
     print('Error logged in Example Flutter app $e.');
   }
+}
+
+void presentAccountSelection(DapiConnection connection) async {
+  String id = await connection.presentAccountSelection();
+  print(id);
 }
 
 DapiBeneficiary getSandboxBeneficiary() {

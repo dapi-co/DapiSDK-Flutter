@@ -14,7 +14,7 @@ class Data extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Date'),
+        title: const Text('Data'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),

@@ -25,7 +25,9 @@ class _DapiAppState extends State<DapiApp> {
       bool isStarted = await Dapi.isStarted();
       return isStarted;
     } on DapiSdkException catch (e) {
-      print('Error logged in Example Flutter app $e.');
+      _error = e.message;
+      var snackBar = SnackBar(content: Text(_error.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return false;
   }
@@ -36,11 +38,11 @@ class _DapiAppState extends State<DapiApp> {
       if (!isDapiStarted) {
         await Dapi.start(
             "ce15a3407b6561da87bd847e27b2f530a6a84279d29d686b3daf60ca2f570cae",
-            "1234ID",
+            "CLIENT_USER_ID",
             configurations: DapiConfigurations(
                 environment: DapiEnvironment.SANDBOX,
                 countries: List.from({"AE"}),
-                postSuccessfulConnectionLoadingText: "Test.."));
+                postSuccessfulConnectionLoadingText: "Loading.."));
       }
     } on DapiSdkException catch (e) {
       _error = e.message;
@@ -83,8 +85,6 @@ class _DapiAppState extends State<DapiApp> {
       var snackBar = SnackBar(content: Text(_error.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
-
-    Dapi.onBankRequest.listen((m) => print("BANK_REQUEST"));
 
     Dapi.onConnectDismissed.listen((m) => print("CONNECT_DISMISSED"));
 

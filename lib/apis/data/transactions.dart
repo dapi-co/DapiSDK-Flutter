@@ -60,7 +60,9 @@ class TransactionsState extends State<Transactions> {
       });
       return transactionsResponse;
     } on DapiSdkException catch (e) {
-      print('Error logged in Example Flutter app $e.');
+      error = e.message;
+      var snackBar = SnackBar(content: Text(error.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
     return null;
   }

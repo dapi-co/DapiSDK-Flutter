@@ -36,13 +36,13 @@ class _DapiAppState extends State<DapiApp> {
     try {
       bool isDapiStarted = await _isStarted();
       if (!isDapiStarted) {
-        await Dapi.start(
-            "APP_KEY",
-            "CLIENT_USER_ID",
+        await Dapi.start("APP_KEY", "CLIENT_USER_ID",
             configurations: DapiConfigurations(
                 environment: DapiEnvironment.SANDBOX,
                 countries: List.from({"AE"}),
-                postSuccessfulConnectionLoadingText: "Loading.."));
+                postSuccessfulConnectionLoadingText: "Loading..",
+                theme:
+                    DapiThemeConfigurations(enforceTheme: DapiTheme.DYNAMIC)));
       }
     } on DapiSdkException catch (e) {
       _error = e.message;
@@ -143,7 +143,8 @@ class _DapiAppState extends State<DapiApp> {
                                     padding: const EdgeInsets.all(24),
                                     child: GestureDetector(
                                       onTap: () {
-                                        selectedConnection = _connections[index];
+                                        selectedConnection =
+                                            _connections[index];
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -1,29 +1,41 @@
 PODS:
   - dapi (0.0.1):
-    - DapiSDK (= 2.31.0)
+    - DapiBanking (= 2.0.1)
     - Flutter
-  - DapiSDK (2.31.0)
+  - DapiBanking (2.0.1)
   - Flutter (1.0.0)
+  - path_provider_ios (0.0.1):
+    - Flutter
+  - shared_preferences_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - dapi (from `.symlinks/plugins/dapi/ios`)
   - Flutter (from `Flutter`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
 
 SPEC REPOS:
   trunk:
-    - DapiSDK
+    - DapiBanking
 
 EXTERNAL SOURCES:
   dapi:
     :path: ".symlinks/plugins/dapi/ios"
   Flutter:
     :path: Flutter
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
 
 SPEC CHECKSUMS:
-  dapi: 85cbed0ebf847de502d3c6c491391fad9284edfd
-  DapiSDK: ef4e80667b0674e5d004c508779f24348f0fd1d7
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  dapi: 4d5b072333df54043012c1045a6d777cb5a290a6
+  DapiBanking: f74207997a364f0634bd18af1c07ebbbdd17e59d
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
 
-PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

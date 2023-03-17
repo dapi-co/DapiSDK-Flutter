@@ -1,4 +1,5 @@
 import 'package:dapisdk_flutter/common/global.dart';
+import 'package:dapisdk_flutter/home/configurations.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dapi/dapi.dart';
@@ -36,7 +37,7 @@ class _DapiAppState extends State<DapiApp> {
     try {
       bool isDapiStarted = await _isStarted();
       if (!isDapiStarted) {
-        await Dapi.start("APP_KEY", "CLIENT_USER_ID",
+        await Dapi.start("36d6cff54b48d0b81dc47ec5115a7bfaf65b15dce4086fa39d15341a125a39bd", "CLIENT_USER_ID",
             configurations: DapiConfigurations(
                 environment: DapiEnvironment.SANDBOX,
                 countries: List.from({"AE"}),
@@ -189,7 +190,14 @@ class _DapiAppState extends State<DapiApp> {
                               })),
                     Button(
                         onPressed: () => presentConnect(),
-                        text: "Connect With Dapi")
+                        text: "Connect With Dapi"),
+                    Button(
+                        onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Configurations()),
+                            ),
+                        text: "Edit Configurations")
                   ],
                 ),
               );

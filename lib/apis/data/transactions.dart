@@ -27,12 +27,10 @@ class TransactionsState extends State<Transactions> {
   Future<DapiTransactionsResponse?> getTransactionsForAccount(
       DapiConnection connection, DateTime fromDate, DateTime toDate) async {
     try {
-      String accountID = await connection.presentAccountSelection();
-      DapiAccountsResponse accountsResponse = await connection.getAccounts();
+      DapiAccount account = await connection.presentAccountSelection();
       DapiTransactionsResponse transactionsResponse =
           await connection.getTransactionsForAccount(
-              accountsResponse.accounts!
-                  .firstWhere((element) => element.id == accountID),
+              account,
               fromDate,
               toDate,
               type: DapiTransactionsType.DEFAULT);

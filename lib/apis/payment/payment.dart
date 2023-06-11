@@ -31,7 +31,7 @@ class Payment extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CreateBeneficiary()),
+                              builder: (context) => const CreateBenef()),
                         )
                       },
                   text: "Create Beneficiary"),

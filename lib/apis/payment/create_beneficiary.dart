@@ -6,16 +6,16 @@ import '../../common/components.dart';
 
 DapiResult? state;
 String? error;
-class CreateBeneficiary extends StatefulWidget {
-  const CreateBeneficiary({super.key});
+class CreateBenef extends StatefulWidget {
+  const CreateBenef({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return CreateBeneficiaryState();
+    return CreateBenefState();
   }
 }
 
-class CreateBeneficiaryState extends State<CreateBeneficiary> {
+class CreateBenefState extends State<CreateBenef> {
   TextEditingController accountNumberController = TextEditingController();
   TextEditingController ibanController = TextEditingController();
   TextEditingController nameController = TextEditingController();

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dapi/dapi.dart';
 
-import '../apis/api_selection.dart';
-import '../common/components.dart';
+import 'apis/api_selection.dart';
+import 'common/components.dart';
 
 void main() {
   runApp(DapiApp());
@@ -37,11 +37,10 @@ class _DapiAppState extends State<DapiApp> {
     try {
       bool isDapiStarted = await _isStarted();
       if (!isDapiStarted) {
-        await Dapi.start("36d6cff54b48d0b81dc47ec5115a7bfaf65b15dce4086fa39d15341a125a39bd", "CLIENT_USER_ID",
+        await Dapi.start("APP_KEY", "CLIENT_USER_ID",
             configurations: DapiConfigurations(
                 environment: DapiEnvironment.SANDBOX,
                 countries: List.from({"AE"}),
-                postSuccessfulConnectionLoadingText: "Loading..",
                 theme:
                     DapiThemeConfigurations(enforceTheme: DapiTheme.DYNAMIC)));
       }

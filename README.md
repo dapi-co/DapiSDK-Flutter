@@ -16,11 +16,18 @@ You can check out our [Flutter Integration Guide](https://docs.dapi.com/docs/flu
 
 ## Run The Example App
 
-1. Clone and open the project on Android Studio.
-2. Open `main.dart` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
-3. For Android, open build.gradle and replace applicationId value `com.dapi.app` with your Bundle ID.
-4. For iOS, open the iOS project on xcode and replace Bundle Identifier value `com.dapi.app` with your Bundle ID.
-5. Sync the project files and run the app.
-6. Click `Start` to initialize DapiSDK.
-7. Click `Connect` button to select your bank and enter credentials to login through Dapi.
-8. After a successful connection, a DapiConnection object is generated and used for making calls to Dapi endpoints that you can call by clicking on any of the buttons like `Get Identity` and `Create Transfer`.
+1. Download and install [Flutter, Android Studio with Flutter Plugin, Xcode](https://docs.flutter.dev/get-started/install/macos/desktop?tab=download)
+2. Clone the project `git clone https://github.com/dapi-co/DapiSDK-Flutter.git`
+3. Open the project in Android Studio
+4. Open `main.dart` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
+5. Android:
+    * Open `android` project folder in Android Studio and go to `Settings -> Build, Execution, Deployment ->  Build Tools -> Gradle -> Gradle JDK` and select JDK 17 if not selected.
+    * Open `build.gradle` and replace applicationId value `com.dapi.app` with your Bundle ID.
+    * Sync gradle
+6. iOS:
+    * Open the `ios` project folder on Xcode.
+    * In the Project Navigator, select the project file -> General -> Identity then replace Bundle Identifier value `com.dapi.app` with your Bundle ID
+7. Run the app.
+8. Click `Start` to initialize DapiSDK.
+9. Click `Connect` button to select your bank and enter credentials to login through Dapi.
+10. After a successful connection, a DapiConnection object is generated and used for making calls to Dapi endpoints that you can call by clicking on any of the buttons like `Get Identity` and `Create Transfer`.

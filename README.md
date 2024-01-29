@@ -19,7 +19,7 @@ You can check out our [Flutter Integration Guide](https://docs.dapi.com/docs/flu
 1. Download and install [Flutter, Android Studio with Flutter Plugin, Xcode](https://docs.flutter.dev/get-started/install/macos/desktop?tab=download)
 2. Clone the project `git clone https://github.com/dapi-co/DapiSDK-Flutter.git`
 3. Open the project in Android Studio
-4. Open `main.dart` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.cf.dapi.co/)
+4. Open `main.dart` and replace `APP_KEY` with your appKey. Can be obtained from [Dapi Dashboard](https://dashboard.dapi.com/login)
 5. Android:
     * Open `android` project folder in Android Studio and go to `Settings -> Build, Execution, Deployment ->  Build Tools -> Gradle -> Gradle JDK` and select JDK 17 if not selected.
     * Open `build.gradle` and replace applicationId value `com.dapi.app` with your Bundle ID.

@@ -25,6 +25,7 @@ You can check out our [Flutter Integration Guide](https://docs.dapi.com/docs/flu
     * Open `build.gradle` and replace applicationId value `com.dapi.app` with your Bundle ID.
     * Sync gradle
 6. iOS:
+    * In your terminal, go to `ios` folder and run `pod install`.
     * Open the `ios` project folder on Xcode.
     * In the Project Navigator, select the project file -> General -> Identity then replace Bundle Identifier value `com.dapi.app` with your Bundle ID
 7. Run the app.
